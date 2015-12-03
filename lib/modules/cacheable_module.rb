@@ -2,7 +2,7 @@ module CacheableModule
   module ClassMethods
     # attr_cacheable(attr) creates cache_find_by_<attr>(val) method which caches the result of find_by_<attr>(val)
     # it added after_commit hook to clear the cache .
-    # Assumption: all the arguments passed are attributes of the class that included this module.
+    # Assumption: all the arguments passed are attributes of the class that included this module and are unique keys.
     def attr_cacheable *args
       class << self
         attr_accessor :cacheable_attrs
@@ -27,8 +27,9 @@ module CacheableModule
       end
       define_method "clear_cache" do
         self.class.cacheable_attrs.each do |attr|
-          Rails.logger.debug "deleting cache #{self.class.name}/#{attr}/#{self.send(attr)}"
-          Rails.cache.delete("#{self.class.name}/#{attr}/#{self.send(attr)}")
+          val = !self.destroyed? && self.previous_changes.key?(attr) ? self.previous_changes[attr][0] : self.send(attr)
+          Rails.logger.debug "deleting cache #{self.class.name}/#{attr}/#{val}"
+          Rails.cache.delete("#{self.class.name}/#{attr}/#{val}")
         end
       end
     end
