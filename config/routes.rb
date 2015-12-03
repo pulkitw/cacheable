@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   resources :users do
     resources :bookings
+    get 'with_no_bookings', on: :collection
+    get 'with_atleast_one_booking', on: :collection
   end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

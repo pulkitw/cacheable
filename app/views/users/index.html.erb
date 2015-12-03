@@ -27,5 +27,8 @@
 </table>
 
 <br>
-
-<%= link_to 'New User', new_user_path %>
+<b>Users</b>
+<%= link_to 'Create New', new_user_path %>
+| <%= link_to 'All', users_path %>
+| <%= link_to 'With No Bookings', with_no_bookings_users_path %>
+| <%= link_to 'With At Least 1 Booking', with_atleast_one_booking_users_path %>

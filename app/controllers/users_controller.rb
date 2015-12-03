@@ -61,6 +61,16 @@ class UsersController < ApplicationController
     end
   end
 
+  def with_no_bookings
+    @users = User.includes(:bookings).where(Booking.table_name => {id: nil})
+    render :index
+  end
+
+  def with_atleast_one_booking
+    @users = User.includes(:bookings).where.not(Booking.table_name => {id: nil})
+    render :index
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
